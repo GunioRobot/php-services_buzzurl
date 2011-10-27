@@ -1,8 +1,8 @@
 <?php
 /**
- * unit test for Services_Buzzurl  
- * 
- * @author     tell-k <ffk2005@gmail.com> 
+ * unit test for Services_Buzzurl
+ *
+ * @author     tell-k <ffk2005@gmail.com>
  * @since      PHP5.2
  * @version    $Id$
  */
@@ -252,7 +252,7 @@ foreach($case as $v) {
 //
 // 実際に投稿のテストをする時 addのテストのコメント合うとは外して行ってください。
 //
-//$email  = ''; //<= your buzzurl login id(email) 
+//$email  = ''; //<= your buzzurl login id(email)
 //$passwd = ''; //<= your buzzurl password
 //
 //$case = array(

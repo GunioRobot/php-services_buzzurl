@@ -1,18 +1,18 @@
 <?php
 
 /**
- * BuzzurlのAPIを扱うためのライブラリ 
- * 
+ * BuzzurlのAPIを扱うためのライブラリ
+ *
  * @category   Services
  * @package    Buzzurl
- * @author     tell-k <ffk2005@gmail.com> 
+ * @author     tell-k <ffk2005@gmail.com>
  * @since      PHP5.2
  * @link       http://labs.ecnavi.jp/developer/buzzurl/api/
  * @version    $Id$
  */
 
 /**
- * BuzzurlのAPIを扱うためのライブラリ 
+ * BuzzurlのAPIを扱うためのライブラリ
  * Brief example of use:
  * <code>
  *
@@ -32,11 +32,11 @@
  *
  * //add bookmark
  * $api = Services_Buzzurl::getInstance();
- * $email  = ''; //<= your buzzurl login id(email)  
+ * $email  = ''; //<= your buzzurl login id(email)
  * $passwd = ''; //<= your buzzurl password
  * $args   = array('url' => 'http://buzzurl.jp');
  * $result = $api->add($email, $passwd, $args);
- * 
+ *
  * if ($result) {
  *     print 'add bookmark success' . "<br />\n";
  * } else {
@@ -44,15 +44,15 @@
  * }
  *
  * </code>
- * 
+ *
  * @category   Services
  * @package    Buzzurl
- * @author     tell-k <ffk2005@gmail.com> 
+ * @author     tell-k <ffk2005@gmail.com>
  * @since      PHP5.2
  * @link       http://labs.ecnavi.jp/developer/buzzurl/api/
  * @version    $Id$
  */
-class Services_Buzzurl 
+class Services_Buzzurl
 {
     static private $instance;
 
@@ -77,24 +77,24 @@ class Services_Buzzurl
     const API_URL = 'http://api.buzzurl.jp/api/%s/%s/%s/%s';
     const ADD_URL = 'https://buzzurl.jp/posts/add/%s/';
 
-    // {{{ __construct() 
+    // {{{ __construct()
 
     /**
-     * コンストラクタ 直接newしない 
-     * 
+     * コンストラクタ 直接newしない
+     *
      * @access private
      * @return void
      */
     private function __construct() {
 
     }
-    
+
     // }}}
-    // {{{ getInstance() 
+    // {{{ getInstance()
 
     /**
-     * Service_Buzzurlのインスタンスを取得 
-     * 
+     * Service_Buzzurlのインスタンスを取得
+     *
      * @static
      * @access public
      * @return object Service_Buzzurl
@@ -108,12 +108,12 @@ class Services_Buzzurl
 
     // }}}
 
-    // {{{ setVersion() 
+    // {{{ setVersion()
 
     /**
      * BuzzurlAPIのバージョンをセット
-     * 
-     * @param  string $version 
+     *
+     * @param  string $version
      * @access public
      * @return void
      */
@@ -126,12 +126,12 @@ class Services_Buzzurl
     }
 
     // }}}
-    // {{{ setFormat() 
+    // {{{ setFormat()
 
     /**
      * 結果データフォーマットの設定
-     * 
-     * @param  string $format 
+     *
+     * @param  string $format
      * @access public
      * @return void
      */
@@ -145,12 +145,12 @@ class Services_Buzzurl
     }
 
     // }}}
-    // {{{ setResponseType() 
+    // {{{ setResponseType()
 
     /**
      * APIからのデータ取得形式 をセット
-     * 
-     * @param string $type 
+     *
+     * @param string $type
      * @access public
      * @return void
      */
@@ -163,13 +163,13 @@ class Services_Buzzurl
     }
 
     // }}}
-    // {{{ getApiUrl() 
+    // {{{ getApiUrl()
 
     /**
      * getApiUrl
-     * 
+     *
      * @param  string $command APIの種別
-     * @param  mixed  $param 
+     * @param  mixed  $param
      * @access public
      * @return string 各APIのURL
      */
@@ -178,12 +178,12 @@ class Services_Buzzurl
     }
 
     // }}}
-    // {{{ makePostData() 
-    
+    // {{{ makePostData()
+
     /**
      * 投稿APIのリクエストパラメータ生成(POST)
-     * 
-     * @param  array $args 
+     *
+     * @param  array $args
      * @access public
      * @return string POSTパラメータ
      */
@@ -197,25 +197,25 @@ class Services_Buzzurl
                 $tmp[$name] = $args[$name];
             }
         }
-        
+
         //keyword
-        if (array_key_exists('keyword', $tmp) 
-            && is_array($tmp['keyword'])) 
+        if (array_key_exists('keyword', $tmp)
+            && is_array($tmp['keyword']))
         {
            array_splice($tmp['keyword'], self::MAX_KEYWORD_NUM);//default 8 words
            $tmp['keyword'] = implode('&keyword=' , $tmp['keyword']);
         }
-        
+
         //reply
-        if (array_key_exists('reply', $tmp) 
-            && !in_array($tmp['reply'], $this->replys)) 
+        if (array_key_exists('reply', $tmp)
+            && !in_array($tmp['reply'], $this->replys))
         {
             unset($tmp['reply']);
         }
 
         //access
-        if (array_key_exists('access', $tmp) 
-            && !in_array($tmp['access'], $this->accesses)) 
+        if (array_key_exists('access', $tmp)
+            && !in_array($tmp['access'], $this->accesses))
         {
             unset($tmp['access']);
         }
@@ -225,36 +225,36 @@ class Services_Buzzurl
         }
         return implode('&', $tmp2);
     }
-    
+
     // }}}
 
 //api command
-    // {{{ add() 
-    
+    // {{{ add()
+
     /**
      * 記事投稿(ブクマ)
-     * 
+     *
      * ログインID(Email)とパスワードが必要になります。
-     * 
-     * $args['url']     = 'http://hogehoge.com' //必須 
+     *
+     * $args['url']     = 'http://hogehoge.com' //必須
      * $args['title']   = 'title'               //任意
      * $args['comment'] = 'comment'             //任意
      * $args['keyword'] = 'keyword'             //任意 (string => 'keyword' or array => array('hoge1', 'hoge2'))
      * $args['reply']   = '0'                   //任意 (0 or 1)
      * $args['access']  = 'private'             //任意 (private or anonymous)
-     * 
+     *
      * @link   http://labs.ecnavi.jp/developer/2007/03/api_2.html
-     * @param  string $email 
-     * @param  string $passwd 
-     * @param  array  $args 
+     * @param  string $email
+     * @param  string $passwd
+     * @param  array  $args
      * @access public
      * @return boolean 投稿成功 true or 投稿失敗 false
      */
     public function add($email, $passwd, $args) {
 
-        if (!is_array($args) 
+        if (!is_array($args)
             || !array_key_exists('url', $args)
-            || !$email 
+            || !$email
             || !$passwd)
         {
             $err = '[' . __CLASS__ . '] argument error';
@@ -268,17 +268,17 @@ class Services_Buzzurl
     }
 
     // }}}
-    // {{{ getArticles() 
+    // {{{ getArticles()
 
     /**
      * ユーザーの最近のエントリー一覧取得
      *
      * キーワードでの絞り込みが可能
-     * 
+     *
      * @link   http://labs.ecnavi.jp/developer/2007/01/jsonapi.html
      * @link   http://labs.ecnavi.jp/developer/2007/03/jsonapi_5.html
-     * @param  string $userId 
-     * @param  string $keywords 
+     * @param  string $userId
+     * @param  string $keywords
      * @access public
      * @return mixed エントリー情報
      */
@@ -289,7 +289,7 @@ class Services_Buzzurl
             throw new InvalidArgumentException($err);
         }
 
-        $param = ($keyword) ? $userId .'/keyword/' . urlencode($keyword) 
+        $param = ($keyword) ? $userId .'/keyword/' . urlencode($keyword)
                             : $userId;
 
         $result = $this->doGet($this->getApiUrl('articles', $param));
@@ -297,7 +297,7 @@ class Services_Buzzurl
     }
 
     //}}}
-    // {{{ getRecentArticles() 
+    // {{{ getRecentArticles()
 
     /**
      * 新着エントリー一覧取得
@@ -313,21 +313,21 @@ class Services_Buzzurl
 
         if (
             ($num && !preg_match('/^[1-9][0-9]*$/', $num))
-            || ($of  && !preg_match('/^[1-9][0-9]*$/', $of)) 
+            || ($of  && !preg_match('/^[1-9][0-9]*$/', $of))
             || ($threshold && !preg_match('/^[1-9][0-9]*$/', $threshold))
         ) {
             $err = '[' . __CLASS__ . '] argument error';
             throw new InvalidArgumentException($err);
         }
 
-        $params = array('num', 'of', 'threshold'); 
+        $params = array('num', 'of', 'threshold');
         $tmp = array();
         foreach ($params as $v) {
             if (!$$v) continue;
 
             if ($v === 'of' || $v === 'threshold') $$v--;
-            
-            $tmp[] = $v . '=' . urlencode($$v); 
+
+            $tmp[] = $v . '=' . urlencode($$v);
         }
         $param = (count($tmp) > 0) ? '?' . implode('&', $tmp) : null;
 
@@ -336,11 +336,11 @@ class Services_Buzzurl
     }
 
     //}}}
-    // {{{ getPostsInfo() 
+    // {{{ getPostsInfo()
 
     /**
      * $url のブクマ登録情報を取得
-     * 
+     *
      * @link   http://labs.ecnavi.jp/developer/2007/01/api_1.html
      * @param  string $url
      * @access public
@@ -359,11 +359,11 @@ class Services_Buzzurl
     }
 
     //}}}
-    // {{{ getCounter() 
+    // {{{ getCounter()
 
     /**
      * $url の ブックマークユーザー数を取得
-     * 
+     *
      * @link   http://labs.ecnavi.jp/developer/2007/01/jsonapi_1.html
      * @param  mixed $url 文字列 or 配列でURLを渡す
      * @access public
@@ -391,13 +391,13 @@ class Services_Buzzurl
     }
 
     //}}}
-    // {{{ getFavarites() 
+    // {{{ getFavarites()
 
     /**
      * $userId が お気に入り登録しているユーザー一覧を取得
-     * 
+     *
      * @link   http://labs.ecnavi.jp/developer/2007/01/jsonapi_2.html
-     * @param  string $userId 
+     * @param  string $userId
      * @access public
      * @return mixed ユーザー一覧
      */
@@ -413,13 +413,13 @@ class Services_Buzzurl
     }
 
     //}}}
-    // {{{ getReaders() 
+    // {{{ getReaders()
 
     /**
      * $userId を お気に入り登録しているユーザー一覧を取得
-     * 
+     *
      * @link   http://labs.ecnavi.jp/developer/2007/01/jsonapi_3.html
-     * @param  string $userId 
+     * @param  string $userId
      * @access public
      * @return mixed ユーザー一覧
      */
@@ -437,7 +437,7 @@ class Services_Buzzurl
     //}}}
 
 //other
-    // {{{ getCounterImgUrl() 
+    // {{{ getCounterImgUrl()
 
     /**
      * ブクマユーザー数イメージ取得APIのURLを取得
@@ -445,7 +445,7 @@ class Services_Buzzurl
      * imgタグのsrcに渡す
      *
      * @link   http://labs.ecnavi.jp/developer/2007/01/api.html
-     * @param  string $userId 
+     * @param  string $userId
      * @access public
      * @return string イメージ取得APIのURL
      */
@@ -462,21 +462,21 @@ class Services_Buzzurl
     }
 
     //}}}
-    // {{{ formatResult() 
+    // {{{ formatResult()
 
     /**
      * APIから取得したデータをformatに合わせて整形
-     * 
+     *
      * @param  string $result JSONデータ
      * @access public
      * @return mixed 整形後のデータ
      */
     public function formatResult($result) {
         switch($this->format) {
-            case 'array': 
+            case 'array':
                 return json_decode($result);
-            case 'json': 
-            default: 
+            case 'json':
+            default:
                 return $result;
         }
     }
@@ -484,12 +484,12 @@ class Services_Buzzurl
     //}}}
 
 //request method
-    // {{{ doGet() 
-    
+    // {{{ doGet()
+
     /**
      * GETリクエスト
-     * 
-     * @param  string $url 
+     *
+     * @param  string $url
      * @access protected
      * @return string レスポンスボディ
      */
@@ -505,12 +505,12 @@ class Services_Buzzurl
     }
 
     // }}}
-    // {{{ doPost() 
+    // {{{ doPost()
 
     /**
      * POSTリクエスト
-     * 
-     * @param  string $url 
+     *
+     * @param  string $url
      * @param  array  $postData
      * @access protected
      * @return string レスポンスボディ
@@ -519,7 +519,7 @@ class Services_Buzzurl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::TIMEOUT);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $email . ':' . $passwd);
         curl_setopt($ch, CURLOPT_URL,  $url);
